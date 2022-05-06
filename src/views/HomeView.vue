@@ -1,15 +1,17 @@
 <template>
   <div class="home">
-      <ShopList />
+      <h1>Shop List Vue</h1>
+    <br/>
+    <ShopList />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import ShopList from '@/components/ShopList.vue';
+import ShopList from "@/components/ShopList.vue";
 
 export default {
-  name: 'HomeView',
+  name: "HomeView",
   components: {
     ShopList,
   },

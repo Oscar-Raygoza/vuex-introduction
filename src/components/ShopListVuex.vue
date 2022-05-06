@@ -1,10 +1,10 @@
 <template>
   <div class="item-list">
-    <h1>{{ shopList.length }} en lista de compras</h1>
+    <h1>{{ getShopList.length }} en lista de compras</h1>
     <form class="form" @submit.prevent="createItem">
       <label class="label" for="item"
         >Agregar nuevo producto:
-        <input class="input" type="text" v-model="newItem" id="item" />
+        <input class="input" type="text" v-model="text" id="item" />
       </label>
 
       <label class="label" for="price"
@@ -18,11 +18,10 @@
     <ul class="list">
       <li
         class="item"
-        v-for="(item, index) in shopList"
+        v-for="(item, index) in getShopList"
         :key="index"
         :class="{ completed: item.completed }"
         @click="completeItemList(item.id)"
-        @keypress="console.log(item.id)"
       >
         {{ item.text }}
       </li>
@@ -38,47 +37,27 @@
 export default {
   name: "ShopList",
   data: () => ({
-    newItem: "",
-    shopList: [],
+    text: "",
     price: 0,
-    total: 0,
   }),
   computed: {
-    getTotal() {
-      if (this.shopList.length < 1) {
-        return 0;
-      }
-      let total = 0;
-
-      this.shopList.map((item) => {
-        if (!item.completed) {
-          total += parseFloat(item.price);
-        }
-        return total;
-      });
-
-      return total;
+    getShopList() {
+      return this.$store.state.shop.shopList;
     },
+    getTotal() {
+      return this.$store.state.shop.getTotal;
+    }
   },
   methods: {
     createItem() {
-      const item = {
-        id: this.shopList.length + 1,
-        text: this.newItem,
+      this.$store.commit("shop/createItem", {
+        id: this.getShopList.length +1, 
+        text: this.text, 
         price: this.price,
-        completed: false,
-      };
-      this.shopList.push(item);
-      this.newItem = "";
-      this.price = "";
+      });
     },
     completeItemList(id) {
-      this.shopList.map((item, index) => {
-        if (item.id === id) {
-          this.shopList[index].completed = !item.completed;
-        }
-        return null;
-      });
+      this.$store.commit("shop/completeItemList", id);
     },
   },
 };
